@@ -1,0 +1,713 @@
+
+{
+"dataset1": {
+"name": "Banking Web App Testing Scenarios",
+"scenarios": [
+{
+"category": "Login",
+"scenario_id": "L01",
+"description": "Verify successful login with valid username and password; expect redirect to dashboard.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Login",
+"scenario_id": "L02",
+"description": "Test login with invalid password; expect error message "Invalid credentials" and no access.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Login",
+"scenario_id": "L03",
+"description": "Attempt login with blank fields; expect validation errors on both username and password.",
+"priority": "Medium",
+"type": "Usability"
+},
+{
+"category": "Login",
+"scenario_id": "L04",
+"description": "Check "Remember Me" checkbox; expect session persists across browser restarts.",
+"priority": "Medium",
+"type": "Functional"
+},
+{
+"category": "Login",
+"scenario_id": "L05",
+"description": "Test login on mobile device; ensure responsive design and touch-friendly inputs.",
+"priority": "High",
+"type": "Usability"
+},
+{
+"category": "Registration",
+"scenario_id": "R01",
+"description": "Register new user with valid email, password, and phone; expect confirmation email sent.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Registration",
+"scenario_id": "R02",
+"description": "Attempt registration with existing email; expect error "Email already in use".",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Registration",
+"scenario_id": "R03",
+"description": "Submit form with weak password (e.g., <6 chars); expect strength validation failure.",
+"priority": "Medium",
+"type": "Security"
+},
+{
+"category": "Registration",
+"scenario_id": "R04",
+"description": "Verify CAPTCHA integration; ensure bot-like submissions are blocked.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Registration",
+"scenario_id": "R05",
+"description": "Test registration timeout after 5 minutes of inactivity; expect session expiry.",
+"priority": "Low",
+"type": "Performance"
+},
+{
+"category": "Dashboard",
+"scenario_id": "D01",
+"description": "Load dashboard after login; verify account balance and recent transactions display correctly.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Dashboard",
+"scenario_id": "D02",
+"description": "Refresh dashboard with no internet; expect offline mode or error handling.",
+"priority": "Medium",
+"type": "Usability"
+},
+{
+"category": "Dashboard",
+"scenario_id": "D03",
+"description": "Check accessibility: Ensure screen reader compatibility for balance readout.",
+"priority": "Medium",
+"type": "Usability"
+},
+{
+"category": "Dashboard",
+"scenario_id": "D04",
+"description": "Simulate high load (1000 users); verify page load time <3 seconds.",
+"priority": "High",
+"type": "Performance"
+},
+{
+"category": "Dashboard",
+"scenario_id": "D05",
+"description": "Test dark mode toggle; ensure all elements switch without visual glitches.",
+"priority": "Low",
+"type": "Usability"
+},
+{
+"category": "Transactions",
+"scenario_id": "T01",
+"description": "Initiate fund transfer to valid account; expect success message and updated balance.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Transactions",
+"scenario_id": "T02",
+"description": "Transfer with insufficient funds; expect error "Insufficient balance".",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Transactions",
+"scenario_id": "T03",
+"description": "Verify transaction history pagination; test navigation to page 2 with 50+ entries.",
+"priority": "Medium",
+"type": "Usability"
+},
+{
+"category": "Transactions",
+"scenario_id": "T04",
+"description": "Attempt SQL injection in amount field (e.g., ' OR 1=1); expect input sanitization.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Transactions",
+"scenario_id": "T05",
+"description": "Test concurrent transfers from same account; ensure no race conditions or duplicates.",
+"priority": "High",
+"type": "Performance"
+},
+{
+"category": "Payments",
+"scenario_id": "P01",
+"description": "Pay bill with linked credit card; verify payment gateway redirect and confirmation.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Payments",
+"scenario_id": "P02",
+"description": "Enter invalid card details; expect validation errors (e.g., wrong CVV).",
+"priority": "Medium",
+"type": "Functional"
+},
+{
+"category": "Payments",
+"scenario_id": "P03",
+"description": "Check for HTTPS during payment; ensure no mixed content warnings.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Payments",
+"scenario_id": "P04",
+"description": "Simulate payment timeout; expect rollback and user notification.",
+"priority": "Medium",
+"type": "Performance"
+},
+{
+"category": "Payments",
+"scenario_id": "P05",
+"description": "Test international payments; verify currency conversion accuracy.",
+"priority": "Low",
+"type": "Functional"
+},
+{
+"category": "Security",
+"scenario_id": "S01",
+"description": "Enable 2FA; verify OTP sent to phone and required for login.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Security",
+"scenario_id": "S02",
+"description": "Attempt brute-force login (5 wrong attempts); expect account lockout for 30 mins.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Security",
+"scenario_id": "S03",
+"description": "Check session hijacking: Log in on device A, then B; ensure A is logged out.",
+"priority": "Medium",
+"type": "Security"
+},
+{
+"category": "Security",
+"scenario_id": "S04",
+"description": "Verify CSRF token in forms; test submission without token fails.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Security",
+"scenario_id": "S05",
+"description": "Scan for XSS vulnerabilities in user input fields (e.g., notes); expect escaping.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Profile",
+"scenario_id": "Pr01",
+"description": "Update user profile email; expect verification email and update confirmation.",
+"priority": "Medium",
+"type": "Functional"
+},
+{
+"category": "Profile",
+"scenario_id": "Pr02",
+"description": "Upload profile picture (valid JPG <2MB); verify display and storage.",
+"priority": "Low",
+"type": "Functional"
+},
+{
+"category": "Profile",
+"scenario_id": "Pr03",
+"description": "Attempt upload of malicious file (e.g., .exe); expect rejection.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Profile",
+"scenario_id": "Pr04",
+"description": "Test profile load on slow network; ensure progressive loading.",
+"priority": "Medium",
+"type": "Performance"
+},
+{
+"category": "Profile",
+"scenario_id": "Pr05",
+"description": "Verify privacy settings: Toggle public visibility; check external access.",
+"priority": "Medium",
+"type": "Usability"
+},
+{
+"category": "Search",
+"scenario_id": "Se01",
+"description": "Search transaction by date range; expect filtered results in table.",
+"priority": "Medium",
+"type": "Functional"
+},
+{
+"category": "Search",
+"scenario_id": "Se02",
+"description": "Search with invalid date (future); expect no results or error.",
+"priority": "Low",
+"type": "Functional"
+},
+{
+"category": "Search",
+"scenario_id": "Se03",
+"description": "Test autocomplete suggestions for payee names.",
+"priority": "Medium",
+"type": "Usability"
+},
+{
+"category": "Search",
+"scenario_id": "Se04",
+"description": "Handle large search results (10k+); verify performance and pagination.",
+"priority": "High",
+"type": "Performance"
+},
+{
+"category": "Search",
+"scenario_id": "Se05",
+"description": "Ensure search is case-insensitive and handles special chars.",
+"priority": "Low",
+"type": "Functional"
+},
+{
+"category": "Logout",
+"scenario_id": "Lo01",
+"description": "Click logout button; expect redirect to login page and session clearance.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Logout",
+"scenario_id": "Lo02",
+"description": "Test auto-logout after 15 mins inactivity; verify warning popup.",
+"priority": "Medium",
+"type": "Security"
+},
+{
+"category": "Logout",
+"scenario_id": "Lo03",
+"description": "Check browser back button after logout; ensure no access to dashboard.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Logout",
+"scenario_id": "Lo04",
+"description": "Logout on multiple tabs; verify all sessions end simultaneously.",
+"priority": "Medium",
+"type": "Functional"
+},
+{
+"category": "Logout",
+"scenario_id": "Lo05",
+"description": "Simulate logout during active transaction; expect safe rollback.",
+"priority": "High",
+"type": "Performance"
+},
+{
+"category": "Compatibility",
+"scenario_id": "C01",
+"description": "Test on Chrome latest; verify all features work without errors.",
+"priority": "High",
+"type": "Usability"
+},
+{
+"category": "Compatibility",
+"scenario_id": "C02",
+"description": "Test on IE11 (legacy); check for graceful degradation.",
+"priority": "Low",
+"type": "Usability"
+},
+{
+"category": "Compatibility",
+"scenario_id": "C03",
+"description": "Verify cross-device: Desktop vs. Tablet; ensure responsive breakpoints.",
+"priority": "Medium",
+"type": "Usability"
+},
+{
+"category": "Compatibility",
+"scenario_id": "C04",
+"description": "Check OS variations: Windows vs. macOS; test keyboard shortcuts.",
+"priority": "Low",
+"type": "Usability"
+},
+{
+"category": "Compatibility",
+"scenario_id": "C05",
+"description": "Test with ad-blockers; ensure core functionality isn't blocked.",
+"priority": "Medium",
+"type": "Functional"
+}
+]
+},
+"dataset2": {
+"name": "E-commerce Web App Testing Scenarios",
+"scenarios": [
+{
+"category": "Login",
+"scenario_id": "L01",
+"description": "Verify successful login with valid credentials; redirect to homepage.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Login",
+"scenario_id": "L02",
+"description": "Test login with incorrect password; show error message.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Login",
+"scenario_id": "L03",
+"description": "Login with empty fields; display validation errors.",
+"priority": "Medium",
+"type": "Usability"
+},
+{
+"category": "Login",
+"scenario_id": "L04",
+"description": "Enable remember me; session persists after closing browser.",
+"priority": "Medium",
+"type": "Functional"
+},
+{
+"category": "Login",
+"scenario_id": "L05",
+"description": "Login on smartphone; check mobile responsiveness.",
+"priority": "High",
+"type": "Usability"
+},
+{
+"category": "Registration",
+"scenario_id": "R01",
+"description": "Register with valid details; send confirmation email.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Registration",
+"scenario_id": "R02",
+"description": "Register with duplicate email; error 'Email in use'.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Registration",
+"scenario_id": "R03",
+"description": "Weak password submission; fail with strength error.",
+"priority": "Medium",
+"type": "Security"
+},
+{
+"category": "Registration",
+"scenario_id": "R04",
+"description": "CAPTCHA verification; block automated registrations.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Registration",
+"scenario_id": "R05",
+"description": "Timeout after inactivity in registration; expire session.",
+"priority": "Low",
+"type": "Performance"
+},
+{
+"category": "Homepage",
+"scenario_id": "H01",
+"description": "Load homepage; verify product categories and search bar.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Homepage",
+"scenario_id": "H02",
+"description": "No network; handle with offline message.",
+"priority": "Medium",
+"type": "Usability"
+},
+{
+"category": "Homepage",
+"scenario_id": "H03",
+"description": "Accessibility check: ARIA labels for images.",
+"priority": "Medium",
+"type": "Usability"
+},
+{
+"category": "Homepage",
+"scenario_id": "H04",
+"description": "High traffic simulation; load time under 2 seconds.",
+"priority": "High",
+"type": "Performance"
+},
+{
+"category": "Homepage",
+"scenario_id": "H05",
+"description": "Theme switch to dark mode; no UI breaks.",
+"priority": "Low",
+"type": "Usability"
+},
+{
+"category": "Product Search",
+"scenario_id": "PS01",
+"description": "Search valid product; display relevant results.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Product Search",
+"scenario_id": "PS02",
+"description": "Search non-existent item; show 'No results' message.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Product Search",
+"scenario_id": "PS03",
+"description": "Filter by price; verify sorting.",
+"priority": "Medium",
+"type": "Usability"
+},
+{
+"category": "Product Search",
+"scenario_id": "PS04",
+"description": "Inject script in search; sanitize input.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Product Search",
+"scenario_id": "PS05",
+"description": "Large result set; paginate efficiently.",
+"priority": "High",
+"type": "Performance"
+},
+{
+"category": "Cart",
+"scenario_id": "C01",
+"description": "Add item to cart; update cart count.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Cart",
+"scenario_id": "C02",
+"description": "Remove item from cart; reflect changes.",
+"priority": "Medium",
+"type": "Functional"
+},
+{
+"category": "Cart",
+"scenario_id": "C03",
+"description": "HTTPS on cart page; no security warnings.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Cart",
+"scenario_id": "C04",
+"description": "Timeout in cart; preserve items on return.",
+"priority": "Medium",
+"type": "Performance"
+},
+{
+"category": "Cart",
+"scenario_id": "C05",
+"description": "Apply coupon code; calculate discount correctly.",
+"priority": "Low",
+"type": "Functional"
+},
+{
+"category": "Checkout",
+"scenario_id": "Ch01",
+"description": "Proceed to checkout; verify order summary.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Checkout",
+"scenario_id": "Ch02",
+"description": "Invalid shipping address; show error.",
+"priority": "Medium",
+"type": "Functional"
+},
+{
+"category": "Checkout",
+"scenario_id": "Ch03",
+"description": "2FA for payment; require OTP.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Checkout",
+"scenario_id": "Ch04",
+"description": "Brute force on promo codes; limit attempts.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Checkout",
+"scenario_id": "Ch05",
+"description": "XSS in address field; escape inputs.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Profile",
+"scenario_id": "Pr01",
+"description": "Update shipping address; confirm changes.",
+"priority": "Medium",
+"type": "Functional"
+},
+{
+"category": "Profile",
+"scenario_id": "Pr02",
+"description": "Change password; require old password.",
+"priority": "Low",
+"type": "Functional"
+},
+{
+"category": "Profile",
+"scenario_id": "Pr03",
+"description": "Upload avatar; restrict file types.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Profile",
+"scenario_id": "Pr04",
+"description": "Load profile on 3G; optimize images.",
+"priority": "Medium",
+"type": "Performance"
+},
+{
+"category": "Profile",
+"scenario_id": "Pr05",
+"description": "View order history; paginate old orders.",
+"priority": "Medium",
+"type": "Usability"
+},
+{
+"category": "Wishlist",
+"scenario_id": "W01",
+"description": "Add product to wishlist; persist across sessions.",
+"priority": "Medium",
+"type": "Functional"
+},
+{
+"category": "Wishlist",
+"scenario_id": "W02",
+"description": "Remove from wishlist; update list.",
+"priority": "Low",
+"type": "Functional"
+},
+{
+"category": "Wishlist",
+"scenario_id": "W03",
+"description": "Share wishlist link; check privacy.",
+"priority": "Medium",
+"type": "Usability"
+},
+{
+"category": "Wishlist",
+"scenario_id": "W04",
+"description": "Handle 1000 items; no performance lag.",
+"priority": "High",
+"type": "Performance"
+},
+{
+"category": "Wishlist",
+"scenario_id": "W05",
+"description": "Search within wishlist; case insensitive.",
+"priority": "Low",
+"type": "Functional"
+},
+{
+"category": "Logout",
+"scenario_id": "Lo01",
+"description": "Logout; clear session and redirect.",
+"priority": "High",
+"type": "Functional"
+},
+{
+"category": "Logout",
+"scenario_id": "Lo02",
+"description": "Auto logout after idle; show timer.",
+"priority": "Medium",
+"type": "Security"
+},
+{
+"category": "Logout",
+"scenario_id": "Lo03",
+"description": "Back button after logout; no access.",
+"priority": "High",
+"type": "Security"
+},
+{
+"category": "Logout",
+"scenario_id": "Lo04",
+"description": "Multi-tab logout; sync across tabs.",
+"priority": "Medium",
+"type": "Functional"
+},
+{
+"category": "Logout",
+"scenario_id": "Lo05",
+"description": "Logout mid-checkout; save cart state.",
+"priority": "High",
+"type": "Performance"
+},
+{
+"category": "Compatibility",
+"scenario_id": "Comp01",
+"description": "Test on Firefox; all functions work.",
+"priority": "High",
+"type": "Usability"
+},
+{
+"category": "Compatibility",
+"scenario_id": "Comp02",
+"description": "Legacy browser support; degrade features.",
+"priority": "Low",
+"type": "Usability"
+},
+{
+"category": "Compatibility",
+"scenario_id": "Comp03",
+"description": "Mobile vs desktop; consistent UI.",
+"priority": "Medium",
+"type": "Usability"
+},
+{
+"category": "Compatibility",
+"scenario_id": "Comp04",
+"description": "Linux OS; keyboard navigation.",
+"priority": "Low",
+"type": "Usability"
+},
+{
+"category": "Compatibility",
+"scenario_id": "Comp05",
+"description": "With VPN; no IP-based issues.",
+"priority": "Medium",
+"type": "Functional"
+}
+]
+}
+}

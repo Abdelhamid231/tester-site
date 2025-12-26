@@ -1,0 +1,13 @@
+{
+  "test_type": "XSS_DOM",
+  "scenario_id": "XSS_DOM_001",
+  "target": "https://google.com",
+  "payload": "#<script>alert('DOM-XSS')</script>",
+  "test_url": "https://google.com#<script>alert('DOM-XSS')</script>",
+  "execution_time": 0.23033952713012695,
+  "console_errors": [],
+  "is_vulnerable": false,
+  "status": "SAFE",
+  "test_number": 1,
+  "timestamp": "2025-12-26T22:32:01.813362"
+}
