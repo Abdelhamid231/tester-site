@@ -91,6 +91,7 @@ export default function Testing() {
             weaknesses: rawResults.weaknesses,
             advice: rawResults.advice,
             metrics: rawResults.metrics,
+            ultra_workflow: rawResults.ultra_workflow,
             issues: (rawResults.workflows || []).map((w: string) => ({
               type: w.toLowerCase().includes("passed") ? "info" : "error",
               message: w,
@@ -124,6 +125,7 @@ export default function Testing() {
             weaknesses: rawResults.weaknesses,
             advice: rawResults.advice,
             detailed_scores: rawResults.detailed_scores,
+            ultra_logs: rawResults.ultra_logs,
             issues: (rawResults.weaknesses || []).map((w: string) => ({
               type: "info",
               message: w,
@@ -414,6 +416,75 @@ export default function Testing() {
                   </CardContent>
                 </Card>
               </div>
+
+              {/* Technical Deep-Dive: Ultra Granular Workflow & Logs */}
+              {(results.ultra_workflow || results.ultra_logs) && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Terminal className="w-5 h-5 text-primary" />
+                    <h3 className="font-display text-lg tracking-wider text-primary">TECHNICAL DEEP-DIVE</h3>
+                  </div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Raw Action Logs */}
+                    <Card className="cyber-card lg:col-span-1 bg-black/40 border-primary/20">
+                      <CardHeader className="py-3">
+                        <CardTitle className="text-xs font-mono uppercase text-muted-foreground">Console Stream</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="font-mono text-[10px] space-y-1 h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-primary/20">
+                          {(results.ultra_logs || []).map((log: string, i: number) => (
+                            <div key={i} className="flex gap-2 opacity-80 hover:opacity-100 transition-opacity">
+                              <span className="text-primary/40">[{i}]</span>
+                              <span className={log.includes("ERROR") ? "text-destructive" : "text-green-400"}>
+                                {log}
+                              </span>
+                            </div>
+                          ))}
+                          {(!results.ultra_logs || results.ultra_logs.length === 0) && (
+                            <p className="text-muted-foreground italic">Streaming activity logs...</p>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Granular Step Breakdown */}
+                    <Card className="cyber-card lg:col-span-2">
+                      <CardHeader className="py-3">
+                        <CardTitle className="text-xs font-mono uppercase text-muted-foreground">Agent Interaction Sequence</CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-0">
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-left text-[11px] font-mono">
+                            <thead>
+                              <tr className="border-b border-primary/10 bg-muted/20">
+                                <th className="p-3 text-primary">STEP / ACTION</th>
+                                <th className="p-3 text-primary">PATH</th>
+                                <th className="p-3 text-primary text-center">ELEMENTS</th>
+                                <th className="p-3 text-primary text-right">TIME</th>
+                                <th className="p-3 text-primary text-right">STATUS</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {(results.ultra_workflow || []).map((step: any, i: number) => (
+                                <tr key={i} className="border-b border-primary/5 hover:bg-primary/5 transition-colors">
+                                  <td className="p-3 font-semibold text-foreground uppercase tracking-tighter">{step.title}</td>
+                                  <td className="p-3 text-muted-foreground">{step.path}</td>
+                                  <td className="p-3 text-center text-primary">{step.elements_found}</td>
+                                  <td className="p-3 text-right">{step.duration.toFixed(2)}s</td>
+                                  <td className={`p-3 text-right font-bold ${step.status === 'passed' ? 'text-green-400' : 'text-destructive'}`}>
+                                    {step.status.toUpperCase()}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              )}
 
               {/* Detailed Metrics Table */}
               {(results.metrics || results.detailed_scores) && (

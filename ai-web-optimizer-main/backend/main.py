@@ -11,16 +11,20 @@ if sys.stdout.encoding != 'utf-8':
 if sys.stderr.encoding != 'utf-8':
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
-# Add V3 paths to sys.path
-V3_PATH = r"c:\Users\PCB DZ\Desktop\Djo\NIT\Modules\L3\S5\SE\Projects\1st project\web-tester-main\V3"
-PRO_TESTING_PATH = os.path.join(V3_PATH, "pro testing")
-SECURITY_TEST_PATH = os.path.join(V3_PATH, "security test")
-FAST_UI_TEST_PATH = os.path.join(V3_PATH, "simple_ui_test")
+# Portability: Resolve V3 path relatively
+BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
+V3_CANDIDATES = [
+    os.path.join(os.path.dirname(os.path.dirname(BACKEND_DIR)), "web-tester-main", "V3"),
+    os.path.join(BACKEND_DIR, "V3"),
+    os.path.join(os.path.dirname(BACKEND_DIR), "V3"),
+    os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(BACKEND_DIR))), "web-tester-main", "V3")
+]
+V3_PATH = next((p for p in V3_CANDIDATES if os.path.exists(p)), V3_CANDIDATES[0])
 
 sys.path.append(V3_PATH)
-sys.path.append(PRO_TESTING_PATH)
-sys.path.append(SECURITY_TEST_PATH)
-sys.path.append(FAST_UI_TEST_PATH)
+sys.path.append(os.path.join(V3_PATH, "pro testing"))
+sys.path.append(os.path.join(V3_PATH, "security test"))
+sys.path.append(os.path.join(V3_PATH, "simple_ui_test"))
 
 from automation_wrapper import run_fast_test, run_security_test, run_pro_test
 

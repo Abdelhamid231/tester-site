@@ -17,6 +17,12 @@ V3_CANDIDATES = [
 
 V3_PATH = next((p for p in V3_CANDIDATES if os.path.exists(p)), V3_CANDIDATES[0])
 
+# Add V3 paths to sys.path
+sys.path.append(V3_PATH)
+sys.path.append(os.path.join(V3_PATH, "pro testing"))
+sys.path.append(os.path.join(V3_PATH, "security test"))
+sys.path.append(os.path.join(V3_PATH, "simple_ui_test"))
+
 def run_fast_test(url):
     try:
         from fast_ui_tester import FastUITester
@@ -47,6 +53,15 @@ def run_fast_test(url):
         weaknesses = tester._get_weaknesses(analysis)
         advice = tester._get_recommendations(analysis)
         
+        # Capture raw action logs for "Ultra" detail
+        raw_logs = []
+        if hasattr(tester, 'logs'):
+            raw_logs = tester.logs
+        elif hasattr(tester, 'all_results'):
+            # Transform results into formatted logs
+            for r in tester.all_results:
+                raw_logs.append(f"[{r.get('type', 'ACTION')}] {r.get('title', 'Test Step')}: {r.get('status', 'OK')}")
+
         tester.driver.quit()
         return {
             "status": "success",
@@ -57,7 +72,8 @@ def run_fast_test(url):
                 "strengths": strengths,
                 "weaknesses": weaknesses,
                 "advice": advice,
-                "detailed_scores": detailed_scores
+                "detailed_scores": detailed_scores,
+                "ultra_logs": raw_logs  # NEW: Surfacing raw terminal-style logs
             }
         }
     except Exception as e:
@@ -160,6 +176,18 @@ def run_pro_test(url):
         except:
             pass
 
+        # Prepare ultra-granular workflow breakdown
+        workflow_details = []
+        for r in tester.all_results:
+            step = {
+                "title": r.get('title', 'Unknown Step'),
+                "status": r.get('final_status', 'N/A'),
+                "duration": r.get('duration', 0),
+                "path": r.get('url', '/'),
+                "elements_found": len(r.get('elements', [])) if 'elements' in r else 0
+            }
+            workflow_details.append(step)
+
         results = {
             "status": "success",
             "results": {
@@ -171,9 +199,12 @@ def run_pro_test(url):
                 "metrics": {
                     "load_time": tester.performance_data[-1]['page_load_time'] if tester.performance_data else 0,
                     "accessibility_score": tester.accessibility_results[-1]['percentage'] if tester.accessibility_results else 0,
-                    "accessibility_grade": tester.accessibility_results[-1]['grade'] if tester.accessibility_results else "N/A"
+                    "accessibility_grade": tester.accessibility_results[-1]['grade'] if tester.accessibility_results else "N/A",
+                    "total_pages_scanned": 1,
+                    "elements_analyzed": len(tester.all_elements)
                 },
-                "workflows": [r['title'] + ": " + r['status'] for r in tester.all_results]
+                "workflows": [r['title'] + ": " + r['status'] for r in tester.all_results],
+                "ultra_workflow": workflow_details  # NEW: Granular breakdown for Pro
             }
         }
 
