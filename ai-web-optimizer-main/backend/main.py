@@ -14,12 +14,21 @@ if sys.stderr.encoding != 'utf-8':
 # Portability: Resolve V3 path relatively
 BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
 V3_CANDIDATES = [
+    # For tester-site structure: backend is in tester-site/ai-web-optimizer-main/backend/
+    os.path.join(os.path.dirname(os.path.dirname(BACKEND_DIR)), "V3"),
+    # For website 2 structure with web-tester-main
     os.path.join(os.path.dirname(os.path.dirname(BACKEND_DIR)), "web-tester-main", "V3"),
+    # Other possible locations
     os.path.join(BACKEND_DIR, "V3"),
     os.path.join(os.path.dirname(BACKEND_DIR), "V3"),
     os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(BACKEND_DIR))), "web-tester-main", "V3")
 ]
-V3_PATH = next((p for p in V3_CANDIDATES if os.path.exists(p)), V3_CANDIDATES[0])
+V3_PATH = next((p for p in V3_CANDIDATES if os.path.exists(p)), None)
+
+if V3_PATH is None:
+    print(f"ERROR: V3 folder not found! Searched: {V3_CANDIDATES}")
+    print("Run 'python diagnostic.py' to debug.")
+    sys.exit(1)
 
 sys.path.append(V3_PATH)
 sys.path.append(os.path.join(V3_PATH, "pro testing"))

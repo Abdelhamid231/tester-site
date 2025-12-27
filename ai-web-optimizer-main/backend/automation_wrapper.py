@@ -10,10 +10,15 @@ BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
 # We'll look for V3 in common locations relative to this script.
 
 V3_CANDIDATES = [
+    # For tester-site structure: backend is in tester-site/ai-web-optimizer-main/backend/
+    # So we go up 2 levels to get to tester-site/, then into V3/
+    os.path.join(os.path.dirname(os.path.dirname(BACKEND_DIR)), "V3"),
+    # For website 2 structure with web-tester-main
     os.path.join(os.path.dirname(os.path.dirname(BACKEND_DIR)), "web-tester-main", "V3"),
+    # Other possible locations
     os.path.join(BACKEND_DIR, "V3"),
     os.path.join(os.path.dirname(BACKEND_DIR), "V3"),
-    os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(BACKEND_DIR))), "V3")  # For tester-site
+    os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(BACKEND_DIR))), "V3")
 ]
 
 V3_PATH = next((p for p in V3_CANDIDATES if os.path.exists(p)), None)
