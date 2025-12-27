@@ -76,7 +76,8 @@ export default function Testing() {
       } else {
         // Call Python Backend for Fast/Security/Pro tests
         const endpoint = `/analyze/${testType}`;
-        const response = await fetch(`http://localhost:8000${endpoint}`, {
+        const backendHost = window.location.hostname;
+        const response = await fetch(`http://${backendHost}:8000${endpoint}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ url: formattedUrl }),
