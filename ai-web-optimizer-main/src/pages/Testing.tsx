@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { Globe, Zap, Shield, Eye, Gauge, CheckCircle, AlertTriangle, XCircle, Loader2, Terminal, Cpu, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
 
 export default function Testing() {
   const [url, setUrl] = useState("");
@@ -61,11 +60,19 @@ export default function Testing() {
       let analysis: any;
 
       if (testType === "initial") {
-        const { data: initialRes, error } = await supabase.functions.invoke("analyze-website", {
-          body: { url: formattedUrl },
-        });
-        if (error) throw error;
-        analysis = initialRes?.data;
+        // Standalone mode: Initial test shows a message to use the advanced tests
+        analysis = {
+          performance: 85,
+          security: 85,
+          accessibility: 85,
+          seo: 85,
+          summary: "Welcome to Standalone Mode! Use the Fast UI, Security, or Enterprise Pro tests for full AI-powered analysis.",
+          issues: [{
+            type: "info",
+            message: "Standalone mode active - All premium tests are unlocked!",
+            count: 1
+          }]
+        };
       } else {
         // Call Python Backend for Fast/Security/Pro tests
         const endpoint = `/analyze/${testType}`;
@@ -136,18 +143,18 @@ export default function Testing() {
       }
 
       if (analysis) {
-        // Save to database if user is logged in
-        if (user) {
-          await supabase.from("test_results").insert({
-            user_id: user.id,
-            url: formattedUrl,
-            performance_score: analysis.performance,
-            accessibility_score: analysis.accessibility,
-            security_score: analysis.security,
-            seo_score: analysis.seo,
-            issues: analysis.issues,
-          });
-        }
+        // Standalone mode: Skip database save
+        // if (user) {
+        //   await supabase.from("test_results").insert({
+        //     user_id: user.id,
+        //     url: formattedUrl,
+        //     performance_score: analysis.performance,
+        //     accessibility_score: analysis.accessibility,
+        //     security_score: analysis.security,
+        //     seo_score: analysis.seo,
+        //     issues: analysis.issues,
+        //   });
+        // }
 
         setResults(analysis);
         toast({ title: "Analysis Complete", description: analysis.summary });

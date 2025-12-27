@@ -4,10 +4,10 @@
   "target": "https://google.com",
   "payload": "#<img src=x onerror=alert('DOM-XSS')>",
   "test_url": "https://google.com#<img src=x onerror=alert('DOM-XSS')>",
-  "execution_time": 0.3631255626678467,
+  "execution_time": 0.1968376636505127,
   "console_errors": [],
   "is_vulnerable": false,
   "status": "SAFE",
   "test_number": 2,
-  "timestamp": "2025-12-26T22:32:03.187771"
+  "timestamp": "2025-12-27T11:17:37.488165"
 }
