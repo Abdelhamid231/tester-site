@@ -52,6 +52,9 @@ app.add_middleware(
 
 class AnalysisRequest(BaseModel):
     url: str
+    bypass_auth: bool = True  # For Enterprise Pro
+    screenshots: bool = True  # For Enterprise Pro
+    crawl_mode: bool = False  # For Enterprise Pro (False = single page, True = crawl)
 
 @app.get("/")
 async def root():
@@ -77,7 +80,12 @@ async def analyze_security(request: AnalysisRequest):
 
 @app.post("/analyze/pro")
 async def analyze_pro(request: AnalysisRequest):
-    result = run_pro_test(request.url)
+    result = run_pro_test(
+        request.url,
+        bypass_auth=request.bypass_auth,
+        screenshots=request.screenshots,
+        crawl_mode=request.crawl_mode
+    )
     if result["status"] == "error":
         raise HTTPException(status_code=500, detail=result["message"])
     return result

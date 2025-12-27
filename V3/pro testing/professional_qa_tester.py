@@ -95,6 +95,25 @@ class ProfessionalQATester:
         
         res['execution_time'] = round(time.time() - t1, 2)
         return res
+
+    def _ensure_browser_alive(self, url):
+        """Check if browser is alive, restart if needed"""
+        try:
+            # Simple check by trying to access current_url
+            _ = self.browser.driver.current_url
+            return True
+        except:
+            print(f"\n[!] BROWSER LOST: Attempting auto-recovery...")
+            try:
+                # Attempt to restart the browser
+                self.browser.initialize_browser()
+                self.browser.driver.get(url)
+                time.sleep(2)
+                print(f"  ✓ Recovery successful. Continuing tests...")
+                return True
+            except Exception as e:
+                print(f"  ❌ Recovery failed: {e}")
+                return False
     
     def process_page_complete(self, url, is_first=False):
         """Complete page processing with ALL advanced features"""
@@ -181,7 +200,16 @@ class ProfessionalQATester:
                 print(f"\n    [{idx}/{len(page_scenarios)}] {scenario.get('scenario_id')} - {scenario.get('title', '')[:60]}")
                 print(f"      Type: {scenario.get('type', 'unknown')}")
                 
-                self.browser.driver.get(url)
+                # RECOVERY: Ensure browser is still alive before each scenario
+                if not self._ensure_browser_alive(url):
+                    print(f"      ⚠️ Skipping scenario due to browser failure")
+                    continue
+                
+                try:
+                    self.browser.driver.get(url)
+                except Exception as e:
+                    print(f"      ⚠️ Navigation failed: {e}")
+                    continue
                 time.sleep(1.5)
                 
                 print(f"      ⚙️  Executing test...", end='', flush=True)

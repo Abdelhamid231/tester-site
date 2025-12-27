@@ -14,6 +14,12 @@ export default function Testing() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState<any>(null);
   const [testType, setTestType] = useState<"initial" | "fast" | "security" | "pro">("initial");
+
+  // Enterprise Pro configuration options
+  const [proBypassAuth, setProBypassAuth] = useState(true);
+  const [proScreenshots, setProScreenshots] = useState(true);
+  const [proCrawlMode, setProCrawlMode] = useState(false); // false = single page, true = crawl
+
   const { toast } = useToast();
   const { user, plan, isAdmin } = useAuth();
 
@@ -77,10 +83,19 @@ export default function Testing() {
         // Call Python Backend for Fast/Security/Pro tests
         const endpoint = `/analyze/${testType}`;
         const backendHost = window.location.hostname;
+
+        // Build request body with configuration options for Enterprise Pro
+        const requestBody: any = { url: formattedUrl };
+        if (testType === "pro") {
+          requestBody.bypass_auth = proBypassAuth;
+          requestBody.screenshots = proScreenshots;
+          requestBody.crawl_mode = proCrawlMode;
+        }
+
         const response = await fetch(`http://${backendHost}:8000${endpoint}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: formattedUrl }),
+          body: JSON.stringify(requestBody),
         });
 
         if (!response.ok) throw new Error("AI Backend error");
@@ -100,6 +115,7 @@ export default function Testing() {
             advice: rawResults.advice,
             metrics: rawResults.metrics,
             ultra_workflow: rawResults.ultra_workflow,
+            report_content: rawResults.report_content, // Capture the full text report
             issues: (rawResults.workflows || []).map((w: string) => ({
               type: w.toLowerCase().includes("passed") ? "info" : "error",
               message: w,
@@ -275,6 +291,77 @@ export default function Testing() {
                   )}
                 </Button>
               </div>
+
+              {/* Enterprise Pro Configuration Options */}
+              {testType === "pro" && !isAnalyzing && (
+                <div className="mt-4 p-4 rounded-lg bg-primary/5 border border-primary/20">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Cpu className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-display text-primary">ENTERPRISE PRO CONFIGURATION</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {/* Bypass Auth Toggle */}
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-primary/10">
+                      <div className="flex items-center gap-2">
+                        <Shield className="w-4 h-4 text-blue-400" />
+                        <span className="text-sm font-mono">Bypass Auth</span>
+                      </div>
+                      <button
+                        onClick={() => setProBypassAuth(!proBypassAuth)}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${proBypassAuth ? 'bg-primary' : 'bg-muted'
+                          }`}
+                      >
+                        <span
+                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${proBypassAuth ? 'translate-x-6' : 'translate-x-1'
+                            }`}
+                        />
+                      </button>
+                    </div>
+
+                    {/* Screenshots Toggle */}
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-primary/10">
+                      <div className="flex items-center gap-2">
+                        <Eye className="w-4 h-4 text-green-400" />
+                        <span className="text-sm font-mono">Screenshots</span>
+                      </div>
+                      <button
+                        onClick={() => setProScreenshots(!proScreenshots)}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${proScreenshots ? 'bg-primary' : 'bg-muted'
+                          }`}
+                      >
+                        <span
+                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${proScreenshots ? 'translate-x-6' : 'translate-x-1'
+                            }`}
+                        />
+                      </button>
+                    </div>
+
+                    {/* Crawl Mode Toggle */}
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-primary/10">
+                      <div className="flex items-center gap-2">
+                        <Globe className="w-4 h-4 text-orange-400" />
+                        <span className="text-sm font-mono">{proCrawlMode ? 'Crawl Mode' : 'Single Page'}</span>
+                      </div>
+                      <button
+                        onClick={() => setProCrawlMode(!proCrawlMode)}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${proCrawlMode ? 'bg-primary' : 'bg-muted'
+                          }`}
+                      >
+                        <span
+                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${proCrawlMode ? 'translate-x-6' : 'translate-x-1'
+                            }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="mt-2 text-xs text-muted-foreground font-mono">
+                    {proBypassAuth && "✓ Manual auth/captcha bypass enabled"}
+                    {proScreenshots && " • Screenshots on errors"}
+                    {proCrawlMode ? " • Will crawl multiple pages" : " • Single page analysis"}
+                  </div>
+                </div>
+              )}
+
               {isAnalyzing && (
                 <div className="mt-4 p-4 rounded-lg bg-muted/30 border border-primary/20">
                   <div className="flex items-center gap-3">
@@ -555,8 +642,8 @@ export default function Testing() {
                 </Card>
               )}
 
-              {/* Action Button */}
-              <div className="text-center">
+              {/* Action Buttons */}
+              <div className="text-center space-y-4">
                 <Button
                   onClick={() => {
                     setResults(null);
@@ -567,6 +654,37 @@ export default function Testing() {
                 >
                   ANALYZE ANOTHER URL
                 </Button>
+
+                {/* Download Report Link (Enterprise Pro only) */}
+                {results.report_content && (
+                  <div className="mt-6 p-4 rounded-lg bg-muted/30 border border-primary/20">
+                    <div className="flex items-center justify-center gap-3">
+                      <Terminal className="w-5 h-5 text-green-400" />
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const blob = new Blob([results.report_content], { type: 'text/plain' });
+                          const url = window.URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = `qa_report_${new Date().toISOString().replace(/[:.]/g, '-')}.txt`;
+                          document.body.appendChild(a);
+                          a.click();
+                          document.body.removeChild(a);
+                          window.URL.revokeObjectURL(url);
+                          toast({ title: "Report Downloaded", description: "Comprehensive QA report saved successfully" });
+                        }}
+                        className="text-green-400 hover:text-green-300 font-mono text-sm underline underline-offset-4 transition-colors"
+                      >
+                        📄 Download Full Comprehensive Report (.txt)
+                      </a>
+                    </div>
+                    <p className="text-xs text-muted-foreground text-center mt-2">
+                      Includes performance, accessibility, workflows, and detailed test results
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           )}

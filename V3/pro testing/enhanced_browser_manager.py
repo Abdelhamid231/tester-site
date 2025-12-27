@@ -100,49 +100,75 @@ class BrowserManager:
     
     def take_screenshot(self, name, test_id="", failed=False):
         """Take screenshot for documentation or failure"""
+        if not self.driver:
+            return None
+            
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         status = "FAIL" if failed else "PASS"
         filename = f"{timestamp}_{status}_{test_id}_{name}.png"
         filepath = os.path.join(self.screenshots_dir, filename)
         
         try:
+            # Check if session is alive
+            _ = self.driver.current_url
             self.driver.save_screenshot(filepath)
             return filepath
         except Exception as e:
-            print(f"Failed to take screenshot: {str(e)}")
+            print(f"Failed to take screenshot (browser may be closed): {str(e)}")
             return None
     
     def show_manual_check(self, url):
         """Show manual check dialog for cookies/login/captcha"""
-        if self.driver:
-            self.driver.quit()
+        print(f"\n[!] MANUAL AUTH MODE: Opening {url}")
         
-        self.driver = self.initialize_browser()
+        if self.driver:
+            try:
+                self.driver.quit()
+            except:
+                pass
+        
+        # Initialize browser in visible mode
+        self.driver = self.initialize_browser(headless=False)
         
         try:
             self.driver.get(url)
+            self.driver.maximize_window()
             time.sleep(2)
             
-            root = tk.Tk()
-            root.title("Manual Check Required")
-            root.geometry("500x250")
-            root.attributes('-topmost', True)
+            print("\n" + "!"*60)
+            print("  ACTION REQUIRED: MANUAL AUTH / CAPTCHA")
+            print(f"  URL: {url}")
+            print("  1. Handle any logins or captchas in the browser window.")
+            print("  2. Click 'Done' in the pop-up OR press ENTER here to continue.")
+            print("!"*60 + "\n")
             
-            msg = "Please handle the following in the browser:\n\n"
-            msg += "1. Accept cookies if prompted\n"
-            msg += "2. Complete login/sign-up if needed\n"
-            msg += "3. Solve CAPTCHA if present\n\n"
-            msg += "Click 'Done' when ready to continue"
-            
-            tk.Label(root, text=msg, font=("Arial", 11), pady=20, justify="left").pack()
-            
-            def on_done():
-                root.destroy()
-            
-            tk.Button(root, text="✓ Done", command=on_done, font=("Arial", 12), 
-                     bg="#4CAF50", fg="white", padx=30, pady=15).pack(pady=10)
-            
-            root.mainloop()
+            # Start GUI wait in a way that doesn't block terminal input entirely if possible
+            # But for simplicity, we'll try to show the GUI
+            try:
+                root = tk.Tk()
+                root.title("Manual Check Required")
+                root.geometry("500x250")
+                root.attributes('-topmost', True)
+                
+                msg = "Please handle the following in the browser:\n\n"
+                msg += "1. Accept cookies if prompted\n"
+                msg += "2. Complete login/sign-up if needed\n"
+                msg += "3. Solve CAPTCHA if present\n\n"
+                msg += "Click 'Done' when ready to continue"
+                
+                tk.Label(root, text=msg, font=("Arial", 11), pady=20, justify="left").pack()
+                
+                def on_done():
+                    root.destroy()
+                
+                tk.Button(root, text="✓ Done", command=on_done, font=("Arial", 12), 
+                         bg="#4CAF50", fg="white", padx=30, pady=15).pack(pady=10)
+                
+                root.mainloop()
+            except Exception as e:
+                print(f"  (GUI notification failed: {e})")
+                print("  Please use the terminal to continue.")
+                input("Press ENTER to continue after you've handled the auth...")
             
             print("  ✓ Manual checks complete, continuing with visible browser...")
             
